@@ -57,6 +57,7 @@ const Register = () => {
             type: 'success',
             message: 'Verifique seu e-mail para finalizar o registro.',
           })
+          form.reset()
         })
         .catch(() => {
           setFeedback({

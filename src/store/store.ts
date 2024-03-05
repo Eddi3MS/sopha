@@ -11,8 +11,7 @@ export const store = configureStore({
 
 /* atualizar usuário no reload */
 onAuthStateChanged(auth, (user) => {
-  const validUserData =
-    !!user?.displayName && !!user?.email && !!user?.emailVerified
+  const validUserData = !!user?.displayName && !!user?.email
 
   if (user && validUserData) {
     store.dispatch(

@@ -4,9 +4,8 @@ import { Button } from '@/components/ui/Button'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/firebase-config'
 
-const Layout = () => {
+const PublicLayout = () => {
   const { user } = useAppSelector((state) => state.user)
-  console.log('🚀 ~ Layout ~ user:', user)
   return (
     <>
       <header className="flex justify-between w-full p-4 bg-slate-600">
@@ -24,4 +23,4 @@ const Layout = () => {
   )
 }
 
-export default Layout
+export default PublicLayout

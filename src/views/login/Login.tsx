@@ -1,3 +1,4 @@
+import { FormFeedback } from '@/components/FormFeedback'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/Card'
 import {
@@ -10,15 +11,19 @@ import {
 } from '@/components/ui/Form'
 import { Input } from '@/components/ui/Input'
 import { auth } from '@/firebase-config'
+import { useFormFeedback } from '@/hooks/useFormFeedback'
 import { LoginSchema } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useTransition } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 const Login = () => {
+  const { feedback, setFeedback } = useFormFeedback()
+  const navigate = useNavigate()
+
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -32,10 +37,15 @@ const Login = () => {
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     startTransition(() => {
       signInWithEmailAndPassword(auth, values.email, values.password)
-        .then((data) => {
-          console.log(data)
+        .then(() => {
+          navigate('/tasks')
         })
-        .catch((err) => console.log(err))
+        .catch(() => {
+          setFeedback({
+            type: 'error',
+            message: 'Algo deu errado, tente novamente mais tarde.',
+          })
+        })
     })
   }
 
@@ -89,6 +99,10 @@ const Login = () => {
                 )}
               />
             </div>
+
+            {feedback && (
+              <FormFeedback message={feedback.message} type={feedback.type} />
+            )}
 
             <Button disabled={isPending} type="submit" className="w-full">
               Entrar
