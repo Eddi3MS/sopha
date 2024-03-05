@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/Input'
 import { auth } from '@/firebase-config'
 import { useFormFeedback } from '@/hooks/useFormFeedback'
-import { RegisterSchema } from '@/schemas'
+import { RegisterSchema, RegisterSchemaType } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   createUserWithEmailAndPassword,
@@ -23,14 +23,13 @@ import {
 import { useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { z } from 'zod'
 
 const Register = () => {
   const { feedback, setFeedback } = useFormFeedback()
 
   const [isPending, startTransition] = useTransition()
 
-  const form = useForm<z.infer<typeof RegisterSchema>>({
+  const form = useForm<RegisterSchemaType>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       name: '',
@@ -39,7 +38,7 @@ const Register = () => {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+  const onSubmit = (values: RegisterSchemaType) => {
     startTransition(() => {
       createUserWithEmailAndPassword(auth, values.email, values.password)
         .then(async (data) => {

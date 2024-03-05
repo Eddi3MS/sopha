@@ -1,24 +1,35 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { Navigate, createBrowserRouter } from 'react-router-dom'
 import PublicLayout from '../layouts/PublicLayout'
 import Login from '../views/login/Login'
 import Register from '../views/register/Register'
 import Tasks from '@/views/tasks/Tasks'
 import PrivateLayout from '@/layouts/PrivateLayout'
+import RootLayout from '@/layouts/RootLayout'
 
 /* todo lazy loading */
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <PublicLayout />,
+    element: <RootLayout />,
     children: [
       {
-        path: '/login',
-        element: <Login />,
-      },
-      {
-        path: '/register',
-        element: <Register />,
+        path: '/',
+        element: <PublicLayout />,
+        children: [
+          {
+            path: '/',
+            element: <Navigate to="/login" />,
+          },
+          {
+            path: '/login',
+            element: <Login />,
+          },
+          {
+            path: '/register',
+            element: <Register />,
+          },
+        ],
       },
       {
         path: '/tasks',

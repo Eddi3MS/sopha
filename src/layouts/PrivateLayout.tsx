@@ -8,7 +8,11 @@ const PrivateLayout = () => {
     return <Navigate to="/login" />
   }
 
-  return <Outlet />
+  return (
+    <main className="flex-1 p-4">
+      <Outlet />
+    </main>
+  )
 }
 
 export default PrivateLayout

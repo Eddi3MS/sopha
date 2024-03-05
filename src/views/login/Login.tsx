@@ -12,13 +12,12 @@ import {
 import { Input } from '@/components/ui/Input'
 import { auth } from '@/firebase-config'
 import { useFormFeedback } from '@/hooks/useFormFeedback'
-import { LoginSchema } from '@/schemas'
+import { LoginSchema, LoginSchemaType } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
-import { z } from 'zod'
 
 const Login = () => {
   const { feedback, setFeedback } = useFormFeedback()
@@ -26,7 +25,7 @@ const Login = () => {
 
   const [isPending, startTransition] = useTransition()
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
+  const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: '',
@@ -34,7 +33,7 @@ const Login = () => {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = (values: LoginSchemaType) => {
     startTransition(() => {
       signInWithEmailAndPassword(auth, values.email, values.password)
         .then(() => {
