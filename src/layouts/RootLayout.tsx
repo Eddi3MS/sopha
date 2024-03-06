@@ -1,8 +1,9 @@
+import { Loading } from '@/components/Loading'
 import { Button } from '@/components/ui/Button'
 import { auth } from '@/firebase-config'
 import { useAppSelector } from '@/store/hooks'
 import { signOut } from 'firebase/auth'
-import { Loader2Icon, LogOut } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 
@@ -17,11 +18,7 @@ const RootLayout = () => {
   }, [])
 
   if (loading) {
-    return (
-      <div className="absolute inset-0 flex justify-center items-center">
-        <Loader2Icon className="animate-spin" />
-      </div>
-    )
+    return <Loading />
   }
 
   return (
@@ -35,6 +32,7 @@ const RootLayout = () => {
               onClick={() => signOut(auth)}
               className="p-0 w-[40px]"
             >
+              <span className="sr-only">sair</span>
               <LogOut size={18} />
             </Button>
           ) : null}

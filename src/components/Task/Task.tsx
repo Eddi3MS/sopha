@@ -69,6 +69,7 @@ export const Task = ({
             onCheckedChange={(checked) =>
               handleUpdateTask({ blocked: !!checked, id })
             }
+            aria-label="bloquear task?"
           />
           <Label htmlFor={`blocked_${id}`} className="cursor-pointer">
             Bloquear?
@@ -85,6 +86,7 @@ export const Task = ({
                 id,
               })
             }}
+            aria-label="marcar como concluída?"
           />
           <Label htmlFor={`concluded_${id}`} className="cursor-pointer">
             Concluir?
