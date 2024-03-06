@@ -37,7 +37,11 @@ const Tasks = () => {
       const parsedData = tasksSchemaDTO.safeParse(tasksArr)
 
       if (parsedData.success) {
-        setTasks(tasksArr)
+        const sortedData = parsedData.data.sort(
+          (a, b) =>
+            new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
+        )
+        setTasks(sortedData)
       }
     })
 

@@ -45,6 +45,7 @@ export const Task = ({
             disabled={blocked}
           >
             <Trash size={16} />
+            <span className="sr-only">deletar task?</span>
           </Button>
         </div>
       </CardHeader>

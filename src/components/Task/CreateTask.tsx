@@ -18,6 +18,7 @@ export const CreateTask = ({
       <DialogTrigger asChild>
         <Button size="icon">
           <Plus size={18} />
+          <span className="sr-only">criar nova task?</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="p-0 w-auto bg-transparent border-none">

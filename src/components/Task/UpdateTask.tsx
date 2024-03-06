@@ -27,6 +27,7 @@ export const UpdateTask = ({
           disabled={blocked}
         >
           <Edit size={16} />
+          <span className="sr-only">editar task?</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="p-0 w-auto bg-transparent border-none">
