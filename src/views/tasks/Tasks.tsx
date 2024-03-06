@@ -38,7 +38,9 @@ const Tasks = () => {
         tasksArr.push({ ...taskData, id: task.id })
       })
 
-      if (tasksSchemaDTO.safeParse(tasksArr)) {
+      const parsedData = tasksSchemaDTO.safeParse(tasksArr)
+
+      if (parsedData.success) {
         setTasks(tasksArr)
       }
     })
@@ -73,7 +75,7 @@ const Tasks = () => {
     <div className="w-[min(98%,1240px)] mx-auto h-full py-4 grid gap-4">
       <div className="flex justify-between items-center">
         <h2 className="text-accent-foreground font-bold text-2xl">
-          Suas Tasks:
+          Olá, {user.name}!
         </h2>
         <Dialog>
           <DialogTrigger asChild>

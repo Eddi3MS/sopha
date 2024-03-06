@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 
 const RootLayout = () => {
-  const user = useAppSelector((state) => state.user)
+  const user = useAppSelector((state) => state.user.user)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -26,9 +26,9 @@ const RootLayout = () => {
 
   return (
     <>
-      <header className="w-full p-4 bg-slate-600 h-[80px] fade-in sticky top-0">
+      <header className="w-full p-4 bg-slate-600 h-[80px] fade-in sticky top-0 flex items-center">
         <div className="w-[min(98%,1240px)] mx-auto flex justify-between items-center">
-          <h1 className="text-white">Task Manager</h1>
+          <h1 className="text-white text-3xl font-bold">Task Manager</h1>
           {user ? (
             <Button
               variant="destructive"

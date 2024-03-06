@@ -1,4 +1,8 @@
-import React from 'react'
+import { priorities, statuses } from '@/lib/dictionary'
+import { TaskSchemaDTOType } from '@/schemas'
+import { Edit, Trash } from 'lucide-react'
+import { Badge } from '../ui/Badge'
+import { Button } from '../ui/Button'
 import {
   Card,
   CardContent,
@@ -6,43 +10,50 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/Card'
-import { Button } from '../ui/Button'
-import { Edit, Trash } from 'lucide-react'
-import { Badge } from '../ui/Badge'
 import { Checkbox } from '../ui/Checkbox'
+import { Dialog, DialogContent, DialogTrigger } from '../ui/Dialog'
 import { Label } from '../ui/Label'
-import { TaskSchemaDTOType } from '@/schemas'
-import { priorities, statuses } from '@/lib/dictionary'
+import { UpdateTask } from './UpdateTask'
 
 export const Task = ({
-  title,
-  status,
-  priority,
-  dueDate,
-  id,
-  description,
   blocked,
   concluded,
   handleDeleteTask,
   handleUpdateTask,
+  ...task
 }: TaskSchemaDTOType & {
   handleDeleteTask: (id: string) => void
   handleUpdateTask: (
     id: { id: string } & Partial<Omit<TaskSchemaDTOType, 'id'>>
   ) => void
 }) => {
+  const { description, dueDate, id, priority, status, title } = task
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{title}</CardTitle>
         <div className="flex gap-4">
-          <Button variant="outline" size="smallIcon" className="">
-            <Edit size={16} />
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="smallIcon"
+                className=""
+                disabled={blocked}
+              >
+                <Edit size={16} />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="p-0 w-auto bg-transparent border-none">
+              <UpdateTask onSubmitCallback={handleUpdateTask} task={task} />
+            </DialogContent>
+          </Dialog>
+
           <Button
             variant="destructive"
             size="smallIcon"
             onClick={handleDeleteTask.bind(null, id)}
+            disabled={blocked}
           >
             <Trash size={16} />
           </Button>
