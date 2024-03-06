@@ -1,7 +1,5 @@
 import { CreateTask } from '@/components/Task/CreateTask'
 import { Task } from '@/components/Task/Task'
-import { Button } from '@/components/ui/Button'
-import { Dialog, DialogContent } from '@/components/ui/Dialog'
 import { db } from '@/firebase-config'
 import {
   TaskSchemaDTOType,
@@ -9,7 +7,6 @@ import {
   tasksSchemaDTO,
 } from '@/schemas'
 import { useAppSelector } from '@/store/hooks'
-import { DialogTrigger } from '@radix-ui/react-dialog'
 import {
   addDoc,
   collection,
@@ -19,7 +16,6 @@ import {
   query,
   updateDoc,
 } from 'firebase/firestore'
-import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const Tasks = () => {
@@ -77,16 +73,8 @@ const Tasks = () => {
         <h2 className="text-accent-foreground font-bold text-2xl">
           Olá, {user.name}!
         </h2>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button size="icon">
-              <Plus size={18} />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="p-0 w-auto bg-transparent border-none">
-            <CreateTask onSubmitCallback={createTask} />
-          </DialogContent>
-        </Dialog>
+
+        <CreateTask onSubmitCallback={createTask} />
       </div>
 
       <div className="grid gap-4">

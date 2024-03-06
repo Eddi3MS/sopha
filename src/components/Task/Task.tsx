@@ -1,6 +1,6 @@
 import { priorities, statuses } from '@/lib/dictionary'
 import { TaskSchemaDTOType } from '@/schemas'
-import { Edit, Trash } from 'lucide-react'
+import { Trash } from 'lucide-react'
 import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
 import {
@@ -11,7 +11,6 @@ import {
   CardTitle,
 } from '../ui/Card'
 import { Checkbox } from '../ui/Checkbox'
-import { Dialog, DialogContent, DialogTrigger } from '../ui/Dialog'
 import { Label } from '../ui/Label'
 import { UpdateTask } from './UpdateTask'
 
@@ -33,21 +32,11 @@ export const Task = ({
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{title}</CardTitle>
         <div className="flex gap-4">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                size="smallIcon"
-                className=""
-                disabled={blocked}
-              >
-                <Edit size={16} />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="p-0 w-auto bg-transparent border-none">
-              <UpdateTask onSubmitCallback={handleUpdateTask} task={task} />
-            </DialogContent>
-          </Dialog>
+          <UpdateTask
+            onSubmitCallback={handleUpdateTask}
+            task={task}
+            blocked={blocked}
+          />
 
           <Button
             variant="destructive"

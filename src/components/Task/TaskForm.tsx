@@ -1,4 +1,5 @@
-import React, { useTransition } from 'react'
+import { Button } from '@/components/ui/Button'
+import { Calendar } from '@/components/ui/Calendar'
 import {
   Form,
   FormControl,
@@ -9,25 +10,23 @@ import {
 } from '@/components/ui/Form'
 import { Input } from '@/components/ui/Input'
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/Popover'
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/Popover'
-import { Button } from '@/components/ui/Button'
-import { CalendarIcon } from 'lucide-react'
-import { Calendar } from '@/components/ui/Calendar'
-import { DialogTrigger } from '@/components/ui/Dialog'
-import { useForm } from 'react-hook-form'
+import { cn } from '@/lib/utils'
 import { CreateTaskSchema, CreateTaskSchemaType } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { cn } from '@/lib/utils'
+import { CalendarIcon } from 'lucide-react'
+import { useTransition } from 'react'
+import { useForm } from 'react-hook-form'
 
 type TaskFormProps =
   | {
@@ -196,11 +195,10 @@ export const TaskForm = (props: TaskFormProps) => {
             )}
           />
         </div>
-        <DialogTrigger asChild>
-          <Button disabled={isPending || !form.formState.isDirty} type="submit">
-            Salvar
-          </Button>
-        </DialogTrigger>
+
+        <Button disabled={isPending || !form.formState.isDirty} type="submit">
+          Salvar
+        </Button>
       </form>
     </Form>
   )

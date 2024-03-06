@@ -42,9 +42,15 @@ export type TasksSchemaDTOType = z.infer<typeof tasksSchemaDTO>
 export type TaskSchemaDTOType = z.infer<typeof tasksSchemaDTO.element>
 
 export const CreateTaskSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
-  dueDate: z.string().min(1),
+  title: z.string().min(1, {
+    message: 'Campo Obrigatório',
+  }),
+  description: z.string().min(1, {
+    message: 'Campo Obrigatório',
+  }),
+  dueDate: z.string().min(1, {
+    message: 'Campo Obrigatório',
+  }),
   priority: z.enum(['HP', 'MP', 'LP']),
   status: z.enum(['todo', 'doing', 'done']),
 })
