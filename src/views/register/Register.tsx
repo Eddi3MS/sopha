@@ -13,21 +13,20 @@ import { Input } from '@/components/ui/Input'
 import { auth } from '@/firebase-config'
 import { useFormFeedback } from '@/hooks/useFormFeedback'
 import { RegisterSchema, RegisterSchemaType } from '@/schemas'
+import { useAppDispatch } from '@/store/hooks'
+import { setUser } from '@/store/user/userSlice'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  signOut,
-  updateProfile,
-} from 'firebase/auth'
-import { useTransition } from 'react'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { Loader2Icon } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 
 const Register = () => {
   const { feedback, setFeedback } = useFormFeedback()
+  const [loading, setLoading] = useState(false)
 
-  const [isPending, startTransition] = useTransition()
+  const dispatch = useAppDispatch()
 
   const form = useForm<RegisterSchemaType>({
     resolver: zodResolver(RegisterSchema),
@@ -38,33 +37,35 @@ const Register = () => {
     },
   })
 
-  const onSubmit = (values: RegisterSchemaType) => {
-    startTransition(() => {
-      createUserWithEmailAndPassword(auth, values.email, values.password)
-        .then(async (data) => {
-          signOut(auth)
+  const onSubmit = async (values: RegisterSchemaType) => {
+    setLoading(true)
 
-          await updateProfile(data.user, {
-            displayName: values.name,
-          })
+    try {
+      const data = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      )
 
-          await sendEmailVerification(data.user, {
-            url: import.meta.env.VITE_URL,
-          })
+      await updateProfile(data.user, {
+        displayName: values.name,
+      })
 
-          setFeedback({
-            type: 'success',
-            message: 'Verifique seu e-mail para finalizar o registro.',
-          })
-          form.reset()
+      dispatch(
+        setUser({
+          email: values.email,
+          id: data.user.uid,
+          name: values.name,
         })
-        .catch(() => {
-          setFeedback({
-            type: 'error',
-            message: 'Algo deu errado, tente novamente mais tarde.',
-          })
-        })
-    })
+      )
+    } catch (error) {
+      setFeedback({
+        type: 'error',
+        message: 'Algo deu errado, tente novamente mais tarde.',
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -87,7 +88,7 @@ const Register = () => {
                     <FormControl>
                       <Input
                         {...field}
-                        disabled={isPending}
+                        disabled={loading}
                         placeholder="João da Silva"
                         type="text"
                         error={!!form.formState.errors.name}
@@ -107,7 +108,7 @@ const Register = () => {
                     <FormControl>
                       <Input
                         {...field}
-                        disabled={isPending}
+                        disabled={loading}
                         placeholder="joão.silva@example.com"
                         type="email"
                         error={!!form.formState.errors.email}
@@ -126,7 +127,7 @@ const Register = () => {
                     <FormControl>
                       <Input
                         {...field}
-                        disabled={isPending}
+                        disabled={loading}
                         placeholder="******"
                         type="password"
                         error={!!form.formState.errors.password}
@@ -141,8 +142,8 @@ const Register = () => {
               <FormFeedback message={feedback.message} type={feedback.type} />
             )}
 
-            <Button disabled={isPending} type="submit" className="w-full">
-              Registrar
+            <Button disabled={loading} type="submit" className="w-full">
+              {loading ? <Loader2Icon className="animate-spin" /> : 'Registrar'}
             </Button>
           </form>
         </Form>

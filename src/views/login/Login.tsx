@@ -15,7 +15,8 @@ import { useFormFeedback } from '@/hooks/useFormFeedback'
 import { LoginSchema, LoginSchemaType } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { useTransition } from 'react'
+import { Loader2Icon } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -23,7 +24,7 @@ const Login = () => {
   const { feedback, setFeedback } = useFormFeedback()
   const navigate = useNavigate()
 
-  const [isPending, startTransition] = useTransition()
+  const [loading, setLoading] = useState(false)
 
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
@@ -33,19 +34,21 @@ const Login = () => {
     },
   })
 
-  const onSubmit = (values: LoginSchemaType) => {
-    startTransition(() => {
-      signInWithEmailAndPassword(auth, values.email, values.password)
-        .then(() => {
-          navigate('/tasks')
-        })
-        .catch(() => {
-          setFeedback({
-            type: 'error',
-            message: 'Algo deu errado, tente novamente mais tarde.',
-          })
-        })
-    })
+  const onSubmit = async (values: LoginSchemaType) => {
+    setLoading(true)
+
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password)
+
+      navigate('/tasks')
+    } catch (error) {
+      setFeedback({
+        type: 'error',
+        message: 'Algo deu errado, tente novamente mais tarde.',
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -68,7 +71,7 @@ const Login = () => {
                     <FormControl>
                       <Input
                         {...field}
-                        disabled={isPending}
+                        disabled={loading}
                         placeholder="joão.silva@example.com"
                         type="email"
                         error={!!form.formState.errors.email}
@@ -87,7 +90,7 @@ const Login = () => {
                     <FormControl>
                       <Input
                         {...field}
-                        disabled={isPending}
+                        disabled={loading}
                         placeholder="******"
                         type="password"
                         error={!!form.formState.errors.password}
@@ -103,8 +106,8 @@ const Login = () => {
               <FormFeedback message={feedback.message} type={feedback.type} />
             )}
 
-            <Button disabled={isPending} type="submit" className="w-full">
-              Entrar
+            <Button disabled={loading} type="submit" className="w-full">
+              {loading ? <Loader2Icon className="animate-spin" /> : 'Entrar'}
             </Button>
           </form>
         </Form>
